@@ -20,19 +20,18 @@ const PostProducts = () => {
   let [inputSize, setInputSizes]: any = useState("");
   let [sizeData, setSizeData]: any = useState([]);
 
-  let userData= useUserdata(); // to get the userdetails
-  
+  let userData = useUserdata(); // to get the userdetails
 
   async function postProductdata() {
     try {
       let api = await fetch(`http://localhost:3000/products`, {
         method: "POST",
         credentials: "include",
-        headers:{
-           "Content-Type": "application/json",
+        headers: {
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId:userData?.userId,
+          userId: userData?.userId,
           title: inputValue.title,
           description: description,
           price: inputValue.price,
@@ -44,14 +43,24 @@ const PostProducts = () => {
       });
 
       let res = await api.json();
-      if(res.status){
-        toast.success("product added successfully")
+      if (res.status) {
+        toast.success("product added successfully");
       }
-    } catch (error:any) {
-      toast.error(error)
+    } catch (error: any) {
+      toast.error(error);
       console.log(error);
     }
   }
+
+  function handleDeleteSize(data: any) {
+    let filteredData = sizeData.filter((item: any) => {
+      return item != data;
+    });
+
+    setSizeData(filteredData);
+  }
+
+  console.log(sizeData, "&&&&");
 
   return (
     <div className="flex-1 border border-gray-200 shadow-lg mt-7 p-5 rounded-lg m-2 text-gray-600">
@@ -92,6 +101,26 @@ const PostProducts = () => {
         setInputSizes={setInputSizes}
         setSizeData={setSizeData}
       />
+      <div className="flex gap-2 flex-wrap">
+        {sizeData?.length
+          ? sizeData?.map((item: any, index: any) => {
+              return (
+                <div
+                  key={index}
+                  className="bg-gray-200 p-1.5 rounded-md mt-2 mb-2 w-fit uppercase text-xs"
+                >
+                  {item || ""}
+                  <button
+                    onClick={() => handleDeleteSize(item)}
+                    className="ms-2 text-black"
+                  >
+                    &times;
+                  </button>
+                </div>
+              );
+            })
+          : ""}
+      </div>
       {/* todo - display the sizes as buttons */}
 
       {/* color */}
